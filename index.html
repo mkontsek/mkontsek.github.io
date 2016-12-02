@@ -1,4 +1,4 @@
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <style>
   body, #app {
@@ -27,9 +27,12 @@
   }
 
   .score-player-x, .score-player-o {
+    top: 0;
+    left: 0;
     padding: 10px;
     background: ivory;
     position: fixed;
+    -webkit-backface-visibility: hidden;
     width: 70px;
     text-align: center;
     z-index: 10;
@@ -156,54 +159,53 @@
   var hasComboFn = {
     north: function (cell, coord, combotype) {
       coord.y--;
-      var nextCell = getCellByCoord(coord);
+      var nextCell = getCellByCoord(coord) || {dataset:{}};
       return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
     },
 
     northeast: function (cell, coord, combotype) {
       coord.y--;
       coord.x++;
-      var nextCell = getCellByCoord(coord);
-
+      var nextCell = getCellByCoord(coord) || {dataset:{}};
       return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
     },
 
     east: function (cell, coord, combotype) {
       coord.x++;
-      var nextCell = getCellByCoord(coord);
+      var nextCell = getCellByCoord(coord) || {dataset:{}};
       return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
     },
 
     southeast: function (cell, coord, combotype) {
       coord.y++;
       coord.x++;
-      var nextCell = getCellByCoord(coord);
+      var nextCell = getCellByCoord(coord) || {dataset:{}};
       return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
     },
 
     south: function (cell, coord, combotype) {
       coord.y++;
-      var nextCell = getCellByCoord(coord);
+      var nextCell = getCellByCoord(coord) || {dataset:{}};
       return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
     },
 
     southwest: function (cell, coord, combotype) {
       coord.y++;
       coord.x--;
-      var nextCell = getCellByCoord(coord);
+      var nextCell = getCellByCoord(coord) || {dataset:{}};
       return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
     },
 
     west: function (cell, coord, combotype) {
       coord.x--;
-      var nextCell = getCellByCoord(coord);
+      var nextCell = getCellByCoord(coord) || {dataset:{}};
       return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
     },
 
     northwest: function (cell, coord, combotype) {
       coord.y--;
       coord.x--;
-      var nextCell = getCellByCoord(coord);
+      var nextCell = getCellByCoord(coord) || {dataset:{}};
       return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
     }
   };
@@ -270,7 +272,7 @@
   createGrid();
 
   // go to middle of grid
-  window.scroll(500, 500);
+  window.scroll(700, 800);
   //**** END   - MAIN APP FLOW
 </script>
 </body>
