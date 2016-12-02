@@ -1,17 +1,17 @@
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 <style>
-  body, #app {
-    position: relative;
+  body, table {
     margin: 0;
+    position: relative;
     font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
   }
 
-  #app {
+  table {
     user-select: none;
   }
 
-  #app .cell {
+  td {
     position: relative;
     display: inline-block;
 
@@ -34,7 +34,6 @@
     background: lightblue;
     font-size: 35px;
     position: fixed;
-    -webkit-backface-visibility: hidden;
     width: 102px;
     z-index: 100;
   }
@@ -95,49 +94,60 @@
   }
 </style>
 <body>
-<div id="app">
-  <span class="score-player-x">X: <span id="points-for-x">0</span></span>
-  <span class="score-player-o">O: <span id="points-for-o">0</span></span>
-</div>
+<span class="score-player-x">X: <span id="points-for-x">0</span></span>
+<span class="score-player-o">O: <span id="points-for-o">0</span></span>
+<table id="grid"></table>
 
 <script>
+  if (navigator.userAgent.toLowerCase().indexOf('android') > -1) {
+    // position fixed not working for Android, have to emulate
+    window.onscroll = function () {
+      var scorex = document.getElementsByClassName('score-player-x')[0],
+          scorey = document.getElementsByClassName('score-player-o')[0];
+      scorex.style.top = document.body.scrollTop;
+      scorex.style.left = document.body.scrollLeft;
+      scorey.style.top = document.body.scrollTop;
+      scorey.style.left = document.body.scrollLeft + 100;
+    }
+  }
+
   var COLS = 100,
       SQUARE_PX = 40,
-      OFFSET = 110, // border width of every cell summed up, so we have same number of cells in rows
-      APP = document.getElementById('app'),
+      APP = document.getElementById('grid'),
       COMBO_COUNT = 5,
       currentPlayer = 'X';
 
-  APP.style.width = COLS * SQUARE_PX + OFFSET;
-  APP.style.height = COLS * SQUARE_PX + OFFSET;
-
   function createGrid() {
-    var i, y = -1, GRID_SIZE = COLS * COLS;
+    var i, j;
 
-    for (i = 0; i < GRID_SIZE; i++) {
-      var cell = document.createElement('div');
+    document.body.style.width = SQUARE_PX * (COLS + 8);
 
-      if (i % COLS === 0) y++;
+    for (i = 0; i < COLS; i++) {
+      var row = document.createElement('tr');
 
-      cell.innerHTML = '';
-      cell.style.width = SQUARE_PX;
-      cell.style.height = SQUARE_PX;
-      cell.className = 'cell';
-      cell.dataset.x = i % COLS;
-      cell.dataset.y = y;
-      cell.dataset.combotype = '';
+      for (j = 0; j < COLS; j++) {
+        var cell = document.createElement('td');
+        cell.innerHTML = '';
+        cell.style.width = SQUARE_PX;
+        cell.style.height = SQUARE_PX;
+        cell.className = 'cell';
+        cell.dataset.x = j;
+        cell.dataset.y = i;
+        cell.dataset.combotype = '';
 
-      cell.addEventListener('click', function () {
-        if (!this.dataset.player) {
-          this.innerHTML = currentPlayer + this.innerHTML;
-          this.dataset.player = currentPlayer;
-          this.style.color = 'black';
+        cell.addEventListener('click', function () {
+          if (!this.dataset.player) {
+            this.innerHTML = currentPlayer + this.innerHTML;
+            this.dataset.player = currentPlayer;
+            this.style.color = 'black';
 
-          checkLogic(this);
-        }
-      });
+            checkLogic(this);
+          }
+        });
 
-      APP.appendChild(cell);
+        row.appendChild(cell);
+      }
+      APP.appendChild(row);
     }
   }
 
