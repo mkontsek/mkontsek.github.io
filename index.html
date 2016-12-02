@@ -1,0 +1,276 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+  body, #app {
+    margin: 0;
+    font-family: 'Comic Sans MS', sans-serif;
+  }
+
+  #app {
+    user-select: none;
+  }
+
+  #app .cell {
+    position: relative;
+    display: inline-block;
+
+    border-left: 1px solid lightgray;
+    border-top: 1px solid lightgray;
+
+    font-weight: bold;
+    font-size: 28px;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+
+    cursor: pointer;
+  }
+
+  .score-player-x, .score-player-o {
+    padding: 10px;
+    background: ivory;
+    position: fixed;
+    width: 70px;
+    text-align: center;
+    z-index: 10;
+  }
+
+  .score-player-o {
+    left: 70px;
+  }
+
+  #points-for-x, #points-for-o {
+    font-weight: bold;
+  }
+
+  /* lines left-right, top-bottom, topleft-bottomright, topright-bottomleft */
+  .line-lr, .line-tb, .line-tlbr, .line-trbl {
+    border-bottom: 3px dotted red;
+    height: 40px;
+    width: 40px;
+    position: absolute;
+  }
+
+  .line-lr {
+    top: -20px;
+  }
+
+  .line-tb {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+
+    top: 0;
+    left: 20px;
+  }
+
+  .line-tlbr {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+
+    left: 10px;
+    top: -15px;
+    width: 120%;
+  }
+
+  .line-trbl {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+
+    left: -15px;
+    top: -15px;
+    width: 120%;
+  }
+</style>
+<body>
+
+<div id="app">
+  <span class="score-player-x">X: <span id="points-for-x">0</span></span>
+  <span class="score-player-o">O: <span id="points-for-o">0</span></span>
+</div>
+
+<script>
+  var COLS = 100,
+      SQUARE_PX = 40,
+      OFFSET = 75, // border width of every cell summed up, so we have same number of cells in rows
+      APP = document.querySelector('#app'),
+      COMBO_COUNT = 5,
+      currentPlayer = 'X';
+
+  APP.style.width = COLS * SQUARE_PX + OFFSET;
+  APP.style.height = COLS * SQUARE_PX + OFFSET;
+
+  function createGrid() {
+    var i, y = -1, GRID_SIZE = COLS * COLS;
+
+    for (i = 0; i < GRID_SIZE; i++) {
+      var cell = document.createElement('div');
+
+      if (i % COLS === 0) y++;
+
+      cell.innerHTML = '';
+      cell.style.width = SQUARE_PX;
+      cell.style.height = SQUARE_PX;
+      cell.className = 'cell';
+      cell.dataset.x = i % COLS;
+      cell.dataset.y = y;
+      cell.dataset.combotype = '';
+
+      cell.addEventListener('click', function () {
+        if (!this.dataset.player) {
+          this.innerHTML = currentPlayer + this.innerHTML;
+          this.dataset.player = currentPlayer;
+          this.style.color = 'black';
+
+          checkLogic(this);
+        }
+      });
+
+      APP.append(cell);
+    }
+  }
+
+  function getCellByCoord(coord) {
+    return document.querySelector('.cell[data-x="' + coord.x + '"][data-y="' + coord.y + '"]');
+  }
+
+  function hasComboType(cell, combotype) {
+    if (!cell.dataset.combotype) return false;
+
+    var hasCombo = false;
+    cell.dataset.combotype.split(',').forEach(function (cellCombo) {
+      if (cellCombo === combotype) hasCombo = true;
+    });
+
+    return hasCombo;
+  }
+
+  var hasComboFn = {
+    north: function (cell, coord, combotype) {
+      coord.y--;
+      var nextCell = getCellByCoord(coord);
+      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+    },
+
+    northeast: function (cell, coord, combotype) {
+      coord.y--;
+      coord.x++;
+      var nextCell = getCellByCoord(coord);
+
+      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+    },
+
+    east: function (cell, coord, combotype) {
+      coord.x++;
+      var nextCell = getCellByCoord(coord);
+      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+    },
+
+    southeast: function (cell, coord, combotype) {
+      coord.y++;
+      coord.x++;
+      var nextCell = getCellByCoord(coord);
+      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+    },
+
+    south: function (cell, coord, combotype) {
+      coord.y++;
+      var nextCell = getCellByCoord(coord);
+      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+    },
+
+    southwest: function (cell, coord, combotype) {
+      coord.y++;
+      coord.x--;
+      var nextCell = getCellByCoord(coord);
+      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+    },
+
+    west: function (cell, coord, combotype) {
+      coord.x--;
+      var nextCell = getCellByCoord(coord);
+      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+    },
+
+    northwest: function (cell, coord, combotype) {
+      coord.y--;
+      coord.x--;
+      var nextCell = getCellByCoord(coord);
+      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+    }
+  };
+
+  function hasCellCombo(cell) {
+    var hasCombo = false;
+
+    // check all functions
+    [
+      ['north', 'south'],
+      ['northeast', 'southwest'],
+      ['east', 'west'],
+      ['northwest', 'southeast']
+    ].forEach(function (moves) {
+      if (hasCombo === true) return;
+
+      var comboCells = [],
+          coord = {x: cell.dataset.x, y: cell.dataset.y},
+          firstDirection = moves[0],
+          secondDirection = moves[1],
+          combotype = moves[0] + moves[1]; // nice candidates for variable destructuring... but no IE support :-(
+
+      // try one direction .... lalala
+      while (hasComboFn[firstDirection](cell, coord, combotype)) comboCells.push(getCellByCoord(coord));
+
+      comboCells.push(cell);
+
+      // try the other direction
+      coord = {x: cell.dataset.x, y: cell.dataset.y}
+      while (hasComboFn[secondDirection](cell, coord, combotype)) comboCells.push(getCellByCoord(coord));
+
+      if (comboCells.length >= COMBO_COUNT) {
+        comboCells.forEach(function (comboCell) {
+          var line = document.createElement('div');
+
+          if (firstDirection === 'east') line.className = 'line-lr';
+          if (firstDirection === 'north') line.className = 'line-tb';
+          if (firstDirection === 'northeast') line.className = 'line-trbl';
+          if (firstDirection === 'northwest') line.className = 'line-tlbr';
+
+          comboCell.dataset.combotype += combotype + ',';
+          comboCell.style.color = 'red';
+          comboCell.appendChild(line);
+        });
+
+        hasCombo = true;
+      }
+    });
+
+    return hasCombo;
+  }
+
+  function checkLogic(cell) {
+    if (hasCellCombo(cell)) {
+      var pointsEl = document.getElementById('points-for-' + currentPlayer.toLowerCase());
+
+      pointsEl.innerHTML = parseInt(pointsEl.innerHTML) + 1;
+    }
+
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  }
+
+  //**** BEGIN - MAIN APP FLOW
+  createGrid();
+
+  // go to middle of grid
+  window.scroll(500, 500);
+  //**** END   - MAIN APP FLOW
+</script>
+</body>
