@@ -2,6 +2,7 @@
 
 <style>
   body, #app {
+    position: relative;
     margin: 0;
     font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
   }
@@ -27,14 +28,15 @@
   }
 
   .score-player-x, .score-player-o {
+    top: 0;
+    left: 0;
     padding: 17px;
     background: lightblue;
     font-size: 35px;
     position: fixed;
     -webkit-backface-visibility: hidden;
     width: 102px;
-    text-align: center;
-    z-index: 10;
+    z-index: 100;
   }
 
   .score-player-o {
@@ -93,7 +95,6 @@
   }
 </style>
 <body>
-
 <div id="app">
   <span class="score-player-x">X: <span id="points-for-x">0</span></span>
   <span class="score-player-o">O: <span id="points-for-o">0</span></span>
@@ -225,13 +226,15 @@
           combotype = moves[0] + moves[1]; // nice candidates for variable destructuring... but no IE support :-(
 
       // try one direction .... lalala
-      while (hasComboFn[firstDirection](cell, coord, combotype)) comboCells.push(getCellByCoord(coord));
+      while (comboCells.length < COMBO_COUNT && hasComboFn[firstDirection](cell, coord, combotype))
+        comboCells.push(getCellByCoord(coord));
 
       comboCells.push(cell);
 
       // try the other direction
       coord = {x: cell.dataset.x, y: cell.dataset.y}
-      while (hasComboFn[secondDirection](cell, coord, combotype)) comboCells.push(getCellByCoord(coord));
+      while (comboCells.length < COMBO_COUNT && hasComboFn[secondDirection](cell, coord, combotype))
+        comboCells.push(getCellByCoord(coord));
 
       if (comboCells.length >= COMBO_COUNT) {
         comboCells.forEach(function (comboCell) {
