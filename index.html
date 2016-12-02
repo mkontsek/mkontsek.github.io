@@ -29,17 +29,17 @@
   .score-player-x, .score-player-o {
     top: 0;
     left: 0;
-    padding: 10px;
-    background: ivory;
+    padding: 17px;
+    background: lightblue;
+    font-size: 35px;
     position: fixed;
-    -webkit-backface-visibility: hidden;
-    width: 70px;
+    width: 102px;
     text-align: center;
     z-index: 10;
   }
 
   .score-player-o {
-    left: 70px;
+    left: 122px;
   }
 
   #points-for-x, #points-for-o {
@@ -103,8 +103,8 @@
 <script>
   var COLS = 100,
       SQUARE_PX = 40,
-      OFFSET = 90, // border width of every cell summed up, so we have same number of cells in rows
-      APP = document.querySelector('#app'),
+      OFFSET = 110, // border width of every cell summed up, so we have same number of cells in rows
+      APP = document.getElementById('app'),
       COMBO_COUNT = 5,
       currentPlayer = 'X';
 
@@ -137,7 +137,7 @@
         }
       });
 
-      APP.append(cell);
+      APP.appendChild(cell);
     }
   }
 
@@ -157,56 +157,53 @@
   }
 
   var hasComboFn = {
+    checkCombo: function (cell, coord, combotype) {
+      var nextCell = getCellByCoord(coord) || {dataset: {}};
+      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+    },
+
     north: function (cell, coord, combotype) {
       coord.y--;
-      var nextCell = getCellByCoord(coord) || {dataset:{}};
-      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+      return hasComboFn.checkCombo(cell, coord, combotype);
     },
 
     northeast: function (cell, coord, combotype) {
       coord.y--;
       coord.x++;
-      var nextCell = getCellByCoord(coord) || {dataset:{}};
-      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+      return hasComboFn.checkCombo(cell, coord, combotype);
     },
 
     east: function (cell, coord, combotype) {
       coord.x++;
-      var nextCell = getCellByCoord(coord) || {dataset:{}};
-      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+      return hasComboFn.checkCombo(cell, coord, combotype);
     },
 
     southeast: function (cell, coord, combotype) {
       coord.y++;
       coord.x++;
-      var nextCell = getCellByCoord(coord) || {dataset:{}};
-      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+      return hasComboFn.checkCombo(cell, coord, combotype);
     },
 
     south: function (cell, coord, combotype) {
       coord.y++;
-      var nextCell = getCellByCoord(coord) || {dataset:{}};
-      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+      return hasComboFn.checkCombo(cell, coord, combotype);
     },
 
     southwest: function (cell, coord, combotype) {
       coord.y++;
       coord.x--;
-      var nextCell = getCellByCoord(coord) || {dataset:{}};
-      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+      return hasComboFn.checkCombo(cell, coord, combotype);
     },
 
     west: function (cell, coord, combotype) {
       coord.x--;
-      var nextCell = getCellByCoord(coord) || {dataset:{}};
-      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+      return hasComboFn.checkCombo(cell, coord, combotype);
     },
 
     northwest: function (cell, coord, combotype) {
       coord.y--;
       coord.x--;
-      var nextCell = getCellByCoord(coord) || {dataset:{}};
-      return nextCell.dataset.player === cell.dataset.player && !hasComboType(nextCell, combotype);
+      return hasComboFn.checkCombo(cell, coord, combotype);
     }
   };
 
@@ -272,7 +269,7 @@
   createGrid();
 
   // go to middle of grid
-  window.scroll(700, 800);
+  window.scroll(1000, 1000);
   //**** END   - MAIN APP FLOW
 </script>
 </body>
