@@ -2,18 +2,18 @@
 
 <style>
   body, table {
+    -ms-user-select: none;
+    user-select: none;
     margin: 0;
     position: relative;
     font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
   }
 
   table {
-    user-select: none;
-    border-collapse:collapse;
+    border-collapse: collapse;
   }
 
   td {
-    user-select: none;
     padding: 0;
     position: relative;
     display: inline-block;
@@ -30,7 +30,7 @@
     cursor: pointer;
   }
 
-  .score-player-x, .score-player-o {
+  #score-player-x, #score-player-o, #refresh {
     top: 0;
     left: 0;
     padding: 17px;
@@ -41,12 +41,27 @@
     z-index: 100;
   }
 
-  .score-player-o {
+  #score-player-o {
     left: 122px;
+  }
+
+  #refresh {
+    left: 230px;
+    width: 50px;
+    cursor: pointer;
+  }
+
+  #refresh img {
+    padding: 7px;
+    width: 35px;
   }
 
   #points-for-x, #points-for-o {
     font-weight: bold;
+  }
+
+  .current-player {
+    text-decoration: underline;
   }
 
   /* lines left-right, top-bottom, topleft-bottomright, topright-bottomleft */
@@ -97,28 +112,44 @@
   }
 </style>
 <body>
-<span class="score-player-x">X: <span id="points-for-x">0</span></span>
-<span class="score-player-o">O: <span id="points-for-o">0</span></span>
+<span id="score-player-x">X: <span id="points-for-x">0</span></span>
+<span id="score-player-o">O: <span id="points-for-o">0</span></span>
+<span id="refresh"><img src="refresh.svg"/></span>
 <table id="grid"></table>
 
 <script>
-  if (navigator.userAgent.toLowerCase().indexOf('android') > -1) {
-    // position fixed not working for Android, have to emulate
-    window.onscroll = function () {
-      var scorex = document.getElementsByClassName('score-player-x')[0],
-          scorey = document.getElementsByClassName('score-player-o')[0];
-      scorex.style.top = document.body.scrollTop;
-      scorex.style.left = document.body.scrollLeft;
-      scorey.style.top = document.body.scrollTop;
-      scorey.style.left = document.body.scrollLeft + 100;
-    }
-  }
-
   var COLS = 100,
       SQUARE_PX = 40,
       APP = document.getElementById('grid'),
       COMBO_COUNT = 5,
-      currentPlayer = 'X';
+      currentPlayer = ['x', 'x'][Math.round(Math.random())],
+      SCORE_X = document.getElementById('score-player-x'),
+      SCORE_Y = document.getElementById('score-player-o'),
+      GAME_STATE = {x: [], o: []};
+
+  if (navigator.userAgent.toLowerCase().indexOf('android') > -1) {
+    // position fixed not working for Android, have to emulate
+    window.onscroll = function () {
+      SCORE_X.style.top = document.body.scrollTop;
+      SCORE_X.style.left = document.body.scrollLeft;
+      SCORE_Y.style.top = document.body.scrollTop;
+      SCORE_Y.style.left = document.body.scrollLeft + 100;
+    }
+  }
+
+  if (currentPlayer === 'x') SCORE_X.className = 'current-player';
+  else SCORE_Y.className = 'current-player';
+
+  document.getElementById('refresh').addEventListener('click', function () {
+    GAME_STATE['x'].forEach(function (el) {
+      el.innerHTML = '';
+      el.removeAttribute('data-player')
+    });
+    GAME_STATE['o'].forEach(function (el) {
+      el.innerHTML = '';
+      el.removeAttribute('data-player')
+    })
+  });
 
   function createGrid() {
     var i, j;
@@ -140,11 +171,13 @@
 
         cell.addEventListener('click', function () {
           if (!this.dataset.player) {
-            this.innerHTML = currentPlayer + this.innerHTML;
+            this.innerHTML = currentPlayer.toUpperCase() + this.innerHTML;
             this.dataset.player = currentPlayer;
             this.style.color = 'black';
 
             checkLogic(this);
+
+            GAME_STATE[currentPlayer].push(this);
           }
         });
 
@@ -272,12 +305,15 @@
 
   function checkLogic(cell) {
     if (hasCellCombo(cell)) {
-      var pointsEl = document.getElementById('points-for-' + currentPlayer.toLowerCase());
+      var pointsEl = document.getElementById('points-for-' + currentPlayer);
 
       pointsEl.innerHTML = parseInt(pointsEl.innerHTML) + 1;
     }
 
-    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    currentPlayer = currentPlayer === 'x' ? 'o' : 'x';
+
+    SCORE_X.classList.toggle('current-player');
+    SCORE_Y.classList.toggle('current-player');
   }
 
   //**** BEGIN - MAIN APP FLOW
