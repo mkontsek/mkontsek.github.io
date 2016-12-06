@@ -30,23 +30,22 @@
     cursor: pointer;
   }
 
-  #score-player-x, #score-player-o, #refresh {
-    top: 0;
-    left: 0;
-    padding: 17px;
+  #score-board {
     background: lightblue;
-    font-size: 35px;
     position: fixed;
-    width: 102px;
     z-index: 100;
+    height: 70px;
+    padding-top: 10px;
   }
 
-  #score-player-o {
-    left: 122px;
+  #score-player-x, #score-player-o, #refresh {
+    padding: 15px;
+    font-size: 35px;
+    width: 102px;
   }
 
   #refresh {
-    left: 230px;
+    vertical-align: middle;
     width: 50px;
     cursor: pointer;
   }
@@ -112,9 +111,11 @@
   }
 </style>
 <body>
-<span id="score-player-x">X: <span id="points-for-x">0</span></span>
-<span id="score-player-o">O: <span id="points-for-o">0</span></span>
-<span id="refresh"><img src="refresh.svg"/></span>
+<div id="score-board">
+  <span id="score-player-x">X: <span id="points-for-x">0</span></span>
+  <span id="score-player-o">O: <span id="points-for-o">0</span></span>
+  <span id="refresh"><img src="refresh.svg"/></span>
+</div>
 <table id="grid"></table>
 
 <script>
@@ -125,15 +126,15 @@
       currentPlayer = ['x', 'x'][Math.round(Math.random())],
       SCORE_X = document.getElementById('score-player-x'),
       SCORE_Y = document.getElementById('score-player-o'),
+      SCOREBOARD = document.getElementById('score-board'),
       GAME_STATE = {x: [], o: []};
 
-  if (navigator.userAgent.toLowerCase().indexOf('android') > -1) {
+  if (navigator.userAgent.toLowerCase().indexOf('android') > -1 ||
+      navigator.userAgent.toLowerCase().indexOf('iphone') > -1) {
     // position fixed not working for Android, have to emulate
     window.onscroll = function () {
-      SCORE_X.style.top = document.body.scrollTop;
-      SCORE_X.style.left = document.body.scrollLeft;
-      SCORE_Y.style.top = document.body.scrollTop;
-      SCORE_Y.style.left = document.body.scrollLeft + 100;
+      SCOREBOARD.style.top = document.body.scrollTop;
+      SCOREBOARD.style.left = document.body.scrollLeft;
     }
   }
 
