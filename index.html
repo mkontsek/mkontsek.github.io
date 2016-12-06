@@ -125,13 +125,18 @@
       COMBO_COUNT = 5,
       currentPlayer = ['x', 'x'][Math.round(Math.random())],
       SCORE_X = document.getElementById('score-player-x'),
-      SCORE_Y = document.getElementById('score-player-o'),
+      SCORE_O = document.getElementById('score-player-o'),
       SCOREBOARD = document.getElementById('score-board'),
-      GAME_STATE = {x: [], o: []};
+      GAME_PLAY = [];
+
+  function Coord(x, y) {
+    this.x = x;
+    this.y = y;
+  }
 
   if (navigator.userAgent.toLowerCase().indexOf('android') > -1 ||
       navigator.userAgent.toLowerCase().indexOf('iphone') > -1) {
-    // position fixed not working for Android, have to emulate
+    // position fixed not working for Android or iPhone, have to emulate
     window.onscroll = function () {
       SCOREBOARD.style.top = document.body.scrollTop;
       SCOREBOARD.style.left = document.body.scrollLeft;
@@ -139,18 +144,28 @@
   }
 
   if (currentPlayer === 'x') SCORE_X.className = 'current-player';
-  else SCORE_Y.className = 'current-player';
+  else SCORE_O.className = 'current-player';
 
   document.getElementById('refresh').addEventListener('click', function () {
-    GAME_STATE['x'].forEach(function (el) {
+    GAME_PLAY.forEach(function (step) {
+      var el = getCellByCoord(step.coord);
       el.innerHTML = '';
       el.removeAttribute('data-player')
     });
-    GAME_STATE['o'].forEach(function (el) {
-      el.innerHTML = '';
-      el.removeAttribute('data-player')
-    })
+    window.localStorage.removeItem('endlessGomoku');
   });
+
+  function updateCurrentPlayer() {
+    currentPlayer = currentPlayer === 'x' ? 'o' : 'x';
+
+    if(currentPlayer === 'x') {
+      SCORE_X.classList.remove('current-player');
+      SCORE_O.classList.add('current-player');
+    } else {
+      SCORE_X.classList.add('current-player');
+      SCORE_O.classList.remove('current-player');
+    }
+  }
 
   function createGrid() {
     var i, j;
@@ -176,9 +191,11 @@
             this.dataset.player = currentPlayer;
             this.style.color = 'black';
 
-            checkLogic(this);
+            GAME_PLAY.push({player: currentPlayer, coord: new Coord(this.dataset.x, this.dataset.y)});
+            window.localStorage.setItem('endlessGomoku', JSON.stringify(GAME_PLAY));
 
-            GAME_STATE[currentPlayer].push(this);
+            checkLogic(this);
+            updateCurrentPlayer();
           }
         });
 
@@ -267,7 +284,7 @@
       if (hasCombo === true) return;
 
       var comboCells = [],
-          coord = {x: cell.dataset.x, y: cell.dataset.y},
+          coord = new Coord(cell.dataset.x, cell.dataset.y),
           firstDirection = moves[0],
           secondDirection = moves[1],
           combotype = moves[0] + moves[1]; // nice candidates for variable destructuring... but no IE support :-(
@@ -279,7 +296,7 @@
       comboCells.push(cell);
 
       // try the other direction
-      coord = {x: cell.dataset.x, y: cell.dataset.y}
+      coord = new Coord(cell.dataset.x, cell.dataset.y);
       while (comboCells.length < COMBO_COUNT && hasComboFn[secondDirection](cell, coord, combotype))
         comboCells.push(getCellByCoord(coord));
 
@@ -304,21 +321,31 @@
     return hasCombo;
   }
 
-  function checkLogic(cell) {
+  function checkLogic(cell, player) {
+    var _player = player ? player : currentPlayer
     if (hasCellCombo(cell)) {
-      var pointsEl = document.getElementById('points-for-' + currentPlayer);
+      var pointsEl = document.getElementById('points-for-' + _player);
 
       pointsEl.innerHTML = parseInt(pointsEl.innerHTML) + 1;
     }
+  }
 
-    currentPlayer = currentPlayer === 'x' ? 'o' : 'x';
+  function loadPreviousGame() {
+    var previousGameTxt = window.localStorage.getItem('endlessGomoku'),
+        previousGame = JSON.parse(previousGameTxt);
 
-    SCORE_X.classList.toggle('current-player');
-    SCORE_Y.classList.toggle('current-player');
+    if (!previousGame || previousGame.length === 0) return;
+
+    currentPlayer = previousGame[0].player;
+
+    previousGame.forEach(function (gameStep) {
+      getCellByCoord(gameStep.coord).click();
+    });
   }
 
   //**** BEGIN - MAIN APP FLOW
   createGrid();
+  loadPreviousGame();
 
   // go to middle of grid
   window.scroll(1000, 1000);
