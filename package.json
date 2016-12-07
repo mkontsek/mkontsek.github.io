@@ -1,0 +1,29 @@
+{
+  "name": "mkontsek.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "devDependencies": {
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "jsdom": "^9.8.3",
+    "tape": "^4.6.3"
+  },
+  "dependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mkontsek/mkontsek.github.io.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mkontsek/mkontsek.github.io/issues"
+  },
+  "homepage": "https://github.com/mkontsek/mkontsek.github.io#readme"
+}
