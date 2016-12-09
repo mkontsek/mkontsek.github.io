@@ -69,6 +69,7 @@
     height: 40px;
     width: 40px;
     position: absolute;
+    z-index: -10;
   }
 
   .line-lr {
@@ -119,14 +120,24 @@
 <table id="grid"></table>
 
 <script>
+  document.onload = function () {
+    APP = document.getElementById('grid');
+    SCORE_X = document.getElementById('score-player-x');
+    SCORE_O = document.getElementById('score-player-o');
+    SCOREBOARD = document.getElementById('score-board');
+
+    createGrid();
+    loadPreviousGame();
+
+    // go to middle of grid
+    window.scroll(1000, 1000);
+  };
+
   var COLS = 100,
       SQUARE_PX = 40,
-      APP = document.getElementById('grid'),
+      APP, SCORE_X, SCORE_O, SCOREBOARD,
       COMBO_COUNT = 5,
-      currentPlayer = ['x', 'x'][Math.round(Math.random())],
-      SCORE_X = document.getElementById('score-player-x'),
-      SCORE_O = document.getElementById('score-player-o'),
-      SCOREBOARD = document.getElementById('score-board'),
+      currentPlayer = ['x', 'o'][Math.round(Math.random())],
       GAME_PLAY = [];
 
   function Coord(x, y) {
@@ -137,16 +148,13 @@
   if (navigator.userAgent.toLowerCase().indexOf('android') > -1 ||
       navigator.userAgent.toLowerCase().indexOf('iphone') > -1) {
     // position fixed not working for Android or iPhone, have to emulate
-      SCOREBOARD.style.position = 'absolute';
+    SCOREBOARD.style.position = 'absolute';
 
     window.onscroll = function () {
       SCOREBOARD.style.top = document.body.scrollTop;
       SCOREBOARD.style.left = document.body.scrollLeft;
     }
   }
-
-  if (currentPlayer === 'x') SCORE_X.className = 'current-player';
-  else SCORE_O.className = 'current-player';
 
   document.getElementById('refresh').addEventListener('click', function () {
     GAME_PLAY.forEach(function (step) {
@@ -160,12 +168,12 @@
   function updateCurrentPlayer() {
     currentPlayer = currentPlayer === 'x' ? 'o' : 'x';
 
-    if(currentPlayer === 'x') {
-      SCORE_X.classList.remove('current-player');
-      SCORE_O.classList.add('current-player');
-    } else {
+    if (currentPlayer === 'x') {
       SCORE_X.classList.add('current-player');
       SCORE_O.classList.remove('current-player');
+    } else {
+      SCORE_X.classList.remove('current-player');
+      SCORE_O.classList.add('current-player');
     }
   }
 
