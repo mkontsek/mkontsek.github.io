@@ -51,51 +51,6 @@ testServer.listen(PORT, function () {
         })
     });
 
-    test('can click on cell', function (t) {
-        t.plan(1);
-        t.fail('TODO')
-    });
-
-/*    test('can get cell by coord', function (t) {
-        t.plan(1);
-        getDom(function (err, window) {
-            t.equals(window.getCellByCoord({
-                x: 2,
-                y: 3
-            }).dataset.x, 2, 'getCellByCoord should return correct coord cell');
-        })
-    });
-    */
-
-    test('load previous game with diagonal combo', function (t) {
-        t.plan(3);
-
-        getDom(function (err, window) {
-            if (!window.localStorage) window.localStorage = localStorage;
-
-            if (err) t.fail('Error parsing website');
-
-            t.equals(typeof window.loadPreviousGame, 'function', 'loadPreviousGame() should be a function');
-
-            window.localStorage.setItem('endlessGomoku', JSON.stringify([
-                {player: 'x', coord: {x: 10, y: 25}},
-                {player: 'x', coord: {x: 11, y: 24}},
-                {player: 'x', coord: {x: 12, y: 23}},
-                {player: 'x', coord: {x: 13, y: 22}},
-                {player: 'x', coord: {x: 14, y: 21}}
-            ]));
-            
-            window.loadPreviousGame();
-
-            var oneOfComboCells = window.getCellByCoord({x: 12, y: 23});
-            t.ok(oneOfComboCells, 'Combo cell should exist at those coordinates');
-
-            t.equals(oneOfComboCells.dataset.combotype, 'northwest', 'Combo type should be northwest');
-        });
-
-
-    });
-
     test.onFinish(function () {
         testServer.close();
         process.exit();

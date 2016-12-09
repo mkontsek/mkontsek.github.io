@@ -120,19 +120,6 @@
 <table id="grid"></table>
 
 <script>
-  document.onload = function () {
-    APP = document.getElementById('grid');
-    SCORE_X = document.getElementById('score-player-x');
-    SCORE_O = document.getElementById('score-player-o');
-    SCOREBOARD = document.getElementById('score-board');
-
-    createGrid();
-    loadPreviousGame();
-
-    // go to middle of grid
-    window.scroll(1000, 1000);
-  };
-
   var COLS = 100,
       SQUARE_PX = 40,
       APP, SCORE_X, SCORE_O, SCOREBOARD,
@@ -160,7 +147,10 @@
     GAME_PLAY.forEach(function (step) {
       var el = getCellByCoord(step.coord);
       el.innerHTML = '';
-      el.removeAttribute('data-player')
+      el.removeAttribute('data-player');
+
+      document.getElementById('points-for-x').innerHTML = '0';
+      document.getElementById('points-for-o').innerHTML = '0';
     });
     window.localStorage.removeItem('endlessGomoku');
   });
@@ -353,12 +343,19 @@
     });
   }
 
-  //**** BEGIN - MAIN APP FLOW
-  createGrid();
-  loadPreviousGame();
+  (function () {
+    APP = document.getElementById('grid');
+    SCORE_X = document.getElementById('score-player-x');
+    SCORE_O = document.getElementById('score-player-o');
+    SCOREBOARD = document.getElementById('score-board');
 
-  // go to middle of grid
-  window.scroll(1000, 1000);
-  //**** END   - MAIN APP FLOW
+    //**** BEGIN - MAIN APP FLOW
+    createGrid();
+    loadPreviousGame();
+
+    // go to middle of grid
+    window.scroll(1000, 1000);
+    //**** END   - MAIN APP FLOW
+  })();
 </script>
 </body>
