@@ -8,7 +8,7 @@
     -moz-user-select: none;
     -ms-user-select: none;
     -o-user-select: none;
-    user-select: none;s
+    user-select: none;
     margin: 0;
     position: relative;
     font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
@@ -128,7 +128,7 @@
       SQUARE_PX = 40,
       APP = document.getElementById('grid'),
       COMBO_COUNT = 5,
-      currentPlayer = ['x', 'x'][Math.round(Math.random())],
+      currentPlayer,
       SCORE_X = document.getElementById('score-player-x'),
       SCORE_O = document.getElementById('score-player-o'),
       SCOREBOARD = document.getElementById('score-board'),
@@ -148,22 +148,31 @@
     }
   }
 
-  if (currentPlayer === 'x') SCORE_X.className = 'current-player';
-  else SCORE_O.className = 'current-player';
+  function setRandomCurrentPlayer() {
+    currentPlayer = ['x', 'o'][Math.round(Math.random())];
+    SCORE_X.className = '';
+    SCORE_O.className = '';
+
+    if (currentPlayer === 'x') SCORE_X.className = 'current-player';
+    else SCORE_O.className = 'current-player';
+  }
+
+  setRandomCurrentPlayer();
 
   document.getElementById('refresh').addEventListener('click', function () {
     GAME_PLAY.forEach(function (step) {
       var el = getCellByCoord(step.coord);
       el.innerHTML = '';
-      el.removeAttribute('data-player')
+      el.removeAttribute('data-player');
     });
     window.localStorage.removeItem('endlessGomoku');
+    setRandomCurrentPlayer();
   });
 
   function updateCurrentPlayer() {
     currentPlayer = currentPlayer === 'x' ? 'o' : 'x';
 
-    if (currentPlayer === 'x') {
+    if (currentPlayer === 'o') {
       SCORE_X.classList.remove('current-player');
       SCORE_O.classList.add('current-player');
     } else {
