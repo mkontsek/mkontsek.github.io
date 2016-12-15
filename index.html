@@ -2,8 +2,13 @@
 
 <style>
   body, table {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;
+    -o-user-select: none;
+    user-select: none;s
     margin: 0;
     position: relative;
     font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
@@ -158,7 +163,7 @@
   function updateCurrentPlayer() {
     currentPlayer = currentPlayer === 'x' ? 'o' : 'x';
 
-    if(currentPlayer === 'x') {
+    if (currentPlayer === 'x') {
       SCORE_X.classList.remove('current-player');
       SCORE_O.classList.add('current-player');
     } else {
@@ -348,7 +353,7 @@
   loadPreviousGame();
 
   // go to middle of grid
-  window.scroll(1000, 1000);
+  window.scroll(1500, 1500);
   //**** END   - MAIN APP FLOW
 </script>
 </body>
