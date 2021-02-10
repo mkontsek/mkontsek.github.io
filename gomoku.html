@@ -1,6 +1,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
 <style>
+    html {
+        font-size: 10px;
+    }
+
     @font-face {
         font-family: comicSans;
         src: url('comicSans.ttf');
@@ -24,7 +28,8 @@
     }
 
     td {
-        padding: 0;
+        padding-bottom: 0.5rem;
+
         position: relative;
         display: inline-block;
 
@@ -32,7 +37,7 @@
         border-top: 1px solid lightgray;
 
         font-weight: bold;
-        font-size: 28px;
+        font-size: 3.5rem;
         text-align: center;
         vertical-align: middle;
         color: white;
@@ -42,27 +47,30 @@
 
     #score-board {
         background: lightblue;
-        position: absolute;
+        position: fixed;
         z-index: 100;
-        height: 70px;
-        padding-top: 10px;
+        height: 6rem;
+        top: 1rem;
+        left: 1rem;
+        padding: 1.5rem;
     }
 
-    #score-player-x, #score-player-o, #refresh {
-        padding: 15px;
-        font-size: 35px;
-        width: 102px;
+    #score-player-x, #score-player-o {
+        font-size: 3.5rem;
+        margin-right: 2rem;
     }
 
     #refresh {
-        vertical-align: middle;
-        width: 50px;
+        vertical-align: bottom;
+        position: relative;
+        top: 0.3rem;
+        width: 5rem;
         cursor: pointer;
     }
 
     #refresh img {
         padding: 7px;
-        width: 35px;
+        width: 3.5rem;
     }
 
     #points-for-x, #points-for-o {
@@ -73,16 +81,15 @@
         text-decoration: underline;
     }
 
-    /* lines left-right, top-bottom, topleft-bottomright, topright-bottomleft */
     .line-lr, .line-tb, .line-tlbr, .line-trbl {
         border-bottom: 3px dotted red;
-        height: 40px;
-        width: 40px;
+        height: 4rem;
+        width: 4rem;
         position: absolute;
     }
 
     .line-lr {
-        top: -20px;
+        top: -2rem;
     }
 
     .line-tb {
@@ -93,7 +100,7 @@
         transform: rotate(90deg);
 
         top: 0;
-        left: 20px;
+        left: 2rem;
     }
 
     .line-tlbr {
@@ -103,8 +110,8 @@
         -o-transform: rotate(45deg);
         transform: rotate(45deg);
 
-        left: 10px;
-        top: -15px;
+        left: 1rem;
+        top: -1.5rem;
         width: 120%;
     }
 
@@ -115,8 +122,8 @@
         -o-transform: rotate(-45deg);
         transform: rotate(-45deg);
 
-        left: -15px;
-        top: -15px;
+        left: -1.5rem;
+        top: -1.5rem;
         width: 120%;
     }
 </style>
