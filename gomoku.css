@@ -1,0 +1,162 @@
+html {
+    font-size: 10px;
+}
+
+@font-face {
+    font-family: comicSans;
+    src: url('comicSans.ttf');
+}
+
+body, table {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    margin: 0;
+    position: relative;
+    font-family: comicSans, 'Chalkboard SE', 'Comic Neue', sans-serif;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    padding-bottom: 0.5rem;
+
+    position: relative;
+    display: inline-block;
+
+    border-left: 1px solid lightgray;
+    border-top: 1px solid lightgray;
+
+    font-weight: bold;
+    font-size: 3.5rem;
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.3s ease;
+}
+
+td:not([data-player]):hover {
+    background-color: rgba(135, 206, 250, 0.3);
+}
+
+td.placed-piece {
+    animation: placePiece 0.2s ease-out;
+}
+
+@keyframes placePiece {
+    0%   { transform: scale(1.35); }
+    100% { transform: scale(1); }
+}
+
+#score-board {
+    background: lightblue;
+    position: fixed;
+    z-index: 100;
+    height: 6rem;
+    top: 1rem;
+    left: 1rem;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+#score-player-x, #score-player-o {
+    font-size: 3.5rem;
+    margin-right: 2rem;
+}
+
+#refresh {
+    vertical-align: bottom;
+    position: relative;
+    top: 0.3rem;
+    width: 5rem;
+    cursor: pointer;
+}
+
+#refresh img {
+    padding: 7px;
+    width: 3.5rem;
+    transition: transform 0.4s ease;
+}
+
+#refresh:hover img {
+    transform: rotate(180deg);
+}
+
+#points-for-x, #points-for-o {
+    font-weight: bold;
+    display: inline-block;
+}
+
+#points-for-x.score-updated, #points-for-o.score-updated {
+    animation: scoreUpdate 0.5s ease-out;
+}
+
+@keyframes scoreUpdate {
+    0%   { transform: scale(1.6); color: #ff4500; }
+    100% { transform: scale(1); }
+}
+
+.current-player {
+    text-decoration: underline;
+}
+
+.line-lr, .line-tb, .line-tlbr, .line-trbl {
+    border-bottom: 3px dotted red;
+    height: 4rem;
+    width: 4rem;
+    position: absolute;
+    animation: winLine 0.4s ease-in;
+}
+
+@keyframes winLine {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.line-lr {
+    top: -2rem;
+}
+
+.line-tb {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+
+    top: 0;
+    left: 2rem;
+}
+
+.line-tlbr {
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+
+    left: 1rem;
+    top: -1.5rem;
+    width: 120%;
+}
+
+.line-trbl {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+
+    left: -1.5rem;
+    top: -1.5rem;
+    width: 120%;
+}
