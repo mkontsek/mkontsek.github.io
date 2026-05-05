@@ -16,8 +16,8 @@ var EXPAND_BY = 20;
 var GRID_LIMIT = 500; // abs max in each direction from 0
 
 function Coord(x, y) {
-    this.x = parseInt(x);
-    this.y = parseInt(y);
+    this.x = parseInt(x, 10);
+    this.y = parseInt(y, 10);
 }
 
 if (navigator.userAgent.toLowerCase().indexOf('android') > -1 ||
@@ -25,15 +25,18 @@ if (navigator.userAgent.toLowerCase().indexOf('android') > -1 ||
     window.onscroll = function () {
         SCOREBOARD.style.top = document.body.scrollTop;
         SCOREBOARD.style.left = document.body.scrollLeft;
-    }
+    };
 }
 
 function setRandomCurrentPlayer() {
     currentPlayer = ['x', 'o'][Math.round(Math.random())];
     SCORE_X.className = '';
     SCORE_O.className = '';
-    if (currentPlayer === 'x') SCORE_X.className = 'current-player';
-    else SCORE_O.className = 'current-player';
+    if (currentPlayer === 'x') {
+        SCORE_X.className = 'current-player';
+    } else {
+        SCORE_O.className = 'current-player';
+    }
 }
 
 setRandomCurrentPlayer();
@@ -41,7 +44,9 @@ setRandomCurrentPlayer();
 document.getElementById('refresh').addEventListener('click', function () {
     GAME_PLAY.forEach(function (step) {
         var el = getCellByCoord(step.coord);
-        if (!el) return;
+        if (!el) {
+            return;
+        }
         el.innerHTML = '';
         el.removeAttribute('data-player');
         el.dataset.combotype = '';
@@ -93,7 +98,7 @@ function createCell(x, y) {
             checkLogic(this);
             updateCurrentPlayer();
 
-            expandIfNeeded(parseInt(this.dataset.x), parseInt(this.dataset.y));
+            expandIfNeeded(parseInt(this.dataset.x, 10), parseInt(this.dataset.y, 10));
         }
     });
 
@@ -122,7 +127,7 @@ function expandIfNeeded(x, y) {
     if (x >= gridMaxX - EXPAND_THRESHOLD && gridMaxX < GRID_LIMIT) {
         var newMaxX = Math.min(gridMaxX + EXPAND_BY, GRID_LIMIT);
         APP.querySelectorAll('tr').forEach(function (row) {
-            var ry = parseInt(row.dataset.y);
+            var ry = parseInt(row.dataset.y, 10);
             for (var nx = gridMaxX + 1; nx <= newMaxX; nx++) {
                 row.appendChild(createCell(nx, ry));
             }
@@ -135,7 +140,7 @@ function expandIfNeeded(x, y) {
     if (x <= gridMinX + EXPAND_THRESHOLD && gridMinX > -GRID_LIMIT) {
         var newMinX = Math.max(gridMinX - EXPAND_BY, -GRID_LIMIT);
         APP.querySelectorAll('tr').forEach(function (row) {
-            var ry = parseInt(row.dataset.y);
+            var ry = parseInt(row.dataset.y, 10);
             var firstCell = row.firstChild;
             for (var nx = gridMinX - 1; nx >= newMinX; nx--) {
                 row.insertBefore(createCell(nx, ry), firstCell);
@@ -190,7 +195,9 @@ function getCellByCoord(coord) {
 var hasComboFn = {
     checkCombo: function (cell, coord) {
         var nextCell = getCellByCoord(coord);
-        if (!nextCell) return false;
+        if (!nextCell) {
+            return false;
+        }
         return nextCell.dataset.player === cell.dataset.player;
     },
 
@@ -248,7 +255,9 @@ function hasCellCombo(cell) {
         ['east', 'west', 'line-lr'],
         ['northwest', 'southeast', 'line-tlbr']
     ].forEach(function (moves) {
-        if (hasCombo === true) return;
+        if (hasCombo === true) {
+            return;
+        }
 
         var comboCells = [],
             coord = new Coord(cell.dataset.x, cell.dataset.y),
@@ -256,14 +265,16 @@ function hasCellCombo(cell) {
             secondDirection = moves[1],
             lineClass = moves[2];
 
-        while (comboCells.length < COMBO_COUNT && hasComboFn[firstDirection](cell, coord))
+        while (comboCells.length < COMBO_COUNT && hasComboFn[firstDirection](cell, coord)) {
             comboCells.push(getCellByCoord(coord));
+        }
 
         comboCells.push(cell);
 
         coord = new Coord(cell.dataset.x, cell.dataset.y);
-        while (comboCells.length < COMBO_COUNT && hasComboFn[secondDirection](cell, coord))
+        while (comboCells.length < COMBO_COUNT && hasComboFn[secondDirection](cell, coord)) {
             comboCells.push(getCellByCoord(coord));
+        }
 
         if (comboCells.length >= COMBO_COUNT) {
             comboCells.forEach(function (comboCell) {
@@ -284,7 +295,7 @@ function checkLogic(cell, player) {
     var _player = player ? player : currentPlayer;
     if (hasCellCombo(cell)) {
         var pointsEl = document.getElementById('points-for-' + _player);
-        pointsEl.innerHTML = parseInt(pointsEl.innerHTML) + 1;
+        pointsEl.innerHTML = parseInt(pointsEl.innerHTML, 10) + 1;
         pointsEl.classList.remove('score-updated');
         void pointsEl.offsetWidth;
         pointsEl.classList.add('score-updated');
@@ -295,13 +306,17 @@ function loadPreviousGame() {
     var previousGameTxt = window.localStorage.getItem('endlessGomoku'),
         previousGame = JSON.parse(previousGameTxt);
 
-    if (!previousGame || previousGame.length === 0) return;
+    if (!previousGame || previousGame.length === 0) {
+        return;
+    }
 
     currentPlayer = previousGame[0].player;
 
     previousGame.forEach(function (gameStep) {
         var cell = getCellByCoord(gameStep.coord);
-        if (cell) cell.click();
+        if (cell) {
+            cell.click();
+        }
     });
 }
 

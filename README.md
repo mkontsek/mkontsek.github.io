@@ -4,12 +4,21 @@ Personal website of Martin Kontsek, a Software Engineer specializing in Web tech
 
 ## About
 
-This repository contains the source code for my personal website hosted on GitHub Pages. The site is built using Hugo 0.80.0 and features a clean, terminal-inspired design.
+This repository contains the source for my personal website hosted on GitHub Pages. The checked-in site is static HTML, CSS, JavaScript, fonts, and SVG assets with a clean, terminal-inspired design.
+
+There is currently no package manager, build step, or test runner in this repo. Validate changes by opening the static pages locally or serving the directory with a simple static file server.
 
 ## Features
 
 - **Homepage**: Introduction and contact information.
 - **Gomoku Game**: Play a large-grid endless-point five-in-a-row game (also known as GOMOKU) directly in the browser.
+
+## Local development
+
+```bash
+python3 -m http.server 3018
+# Open http://localhost:3018/ and http://localhost:3018/gomoku.html
+```
 
 ## Links
 
