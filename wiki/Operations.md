@@ -24,8 +24,20 @@ python3 -m http.server 3018
 ## Tests & checks
 
 ```bash
-node --check gomoku.js
-# No repo-specific lint, test, typecheck, or build scripts currently exist.
+python3 scripts/check-static-site.py
+```
+
+The validation gate covers:
+
+- Lint: root HTML parsing, local HTML asset references, CSS balance, and `node --check` for JavaScript syntax.
+- Format / Prettier: Prettier is not configured because the repo has no package manager; trailing-whitespace checks provide dependency-free formatting coverage.
+- Test: no unit test runner exists; static server smoke checks cover page and direct asset availability.
+- Build: no build step is required for GitHub Pages; smoke checks are the build-equivalent gate.
+
+Enable the tracked pre-commit hook locally:
+
+```bash
+git config core.hooksPath .githooks
 ```
 
 ## Deploy

@@ -22,6 +22,14 @@ tags: [wiki, adr]
 
 <!-- newest first -->
 
+## 2026-05-05 — Dependency-free commit validation
+
+- Context: commits need local gates for lint, format, test, and build intent, but this GitHub Pages site has no package manager, generated build, or unit test runner.
+- Decision: add a tracked `.githooks/pre-commit` that runs `scripts/check-static-site.py`, keeping validation in Python and Node already used for JavaScript syntax checks.
+- Alternatives rejected: adding npm, Prettier, ESLint, or a test framework only for hooks; relying on untracked `.git/hooks`; validating by manual browser checks only.
+- Consequences: contributors must run `git config core.hooksPath .githooks` once per clone; validation remains lightweight and dependency-free, with documented N/A categories for unsupported tooling.
+- Status: accepted.
+
 ## 2026-05-05 — Wiki added
 
 - Context: agents and humans needed a place to record project-specific knowledge that does not belong in the code or in `wiki/skills/`.

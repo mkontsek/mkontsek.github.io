@@ -23,6 +23,7 @@ tags: [wiki, conventions]
 - Prefer dependency-free browser JavaScript for small interactive features.
 - Use relative links for local assets and pages.
 - Keep `localStorage` keys stable when changing saved Gomoku state.
+- Keep validation dependency-free unless the project adopts a package manager; use `scripts/check-static-site.py` and `.githooks/pre-commit` for lint, format, test, and build-equivalent gates.
 
 ## Patterns we have rejected
 
@@ -31,7 +32,6 @@ tags: [wiki, conventions]
 ## Open questions
 
 - Whether to keep the legacy Hugo-generated metadata/credits in `index.html` or regenerate the site from source.
-- Whether to add a formatter/linter for static assets.
 
 ## Related
 

@@ -20,6 +20,28 @@ python3 -m http.server 3018
 # Open http://localhost:3018/ and http://localhost:3018/gomoku.html
 ```
 
+## Validation and pre-commit hooks
+
+This static site intentionally has no package manager, npm scripts, or build step.
+Use the dependency-free validation gate before committing:
+
+```bash
+python3 scripts/check-static-site.py
+```
+
+Enable the tracked pre-commit hook locally so commits run the same gate:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The hook covers the usual categories as follows:
+
+- **Lint**: parses root HTML files, checks local HTML asset references, verifies CSS brace/comment/string balance, and runs `node --check` for JavaScript syntax.
+- **Format / Prettier**: Prettier is N/A because the repo has no package manager; the hook enforces dependency-free trailing-whitespace checks.
+- **Test**: no unit test runner exists; the hook runs static server smoke checks for the pages and direct local assets.
+- **Build**: no generated build is required for GitHub Pages; the smoke checks are the build-equivalent gate.
+
 ## Links
 
 - **Email**: mvk@sabercrown.com

@@ -43,6 +43,11 @@ Update **as part of the same change**, not as a follow-up:
 
 If the wiki contradicts the code, **the wiki is wrong** — fix it in the same PR.
 
+## Quality gate documentation
+
+- Every non-legacy project must document and keep a tracked pre-commit hook that runs `lint`, `prettier`/`format`, `test`, and `build` before commit.
+- If a category is genuinely unavailable (for example a static site without a test runner), the hook and wiki must run the closest equivalent validation and document the N/A category explicitly.
+
 ## How to write wiki entries
 
 - Markdown only. No HTML, no plugin-specific syntax. Frontmatter (`---` blocks) is allowed.

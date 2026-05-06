@@ -52,7 +52,7 @@ Authoritative details: `wiki/skills/wiki.md`
 
 -   Branch naming: `<type>/<ticket-number>` where type is one of `refactor|feat|test|chore|fix`.
 -   Commit format: `<type>: <ticket-number> <description>` (Conventional Commit semantics).
--   Use pre-commit hooks that run `lint`, `test`, and `build` before commit.
+-   Use pre-commit hooks that run `lint`, `prettier`/`format`, `test`, and `build` before commit.
 -   Rebase on `main` before PR; do not merge `main` into feature branches.
 -   Keep PRs focused and reasonably small; split large changes when needed.
 
