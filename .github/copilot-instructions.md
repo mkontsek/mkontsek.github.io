@@ -6,6 +6,7 @@
 >
 > -   `.github/copilot-instructions.md` (this file): core philosophy + cross-cutting constraints.
 > -   `wiki/skills/`: detailed stack-specific rules:
+>     -   `lint-and-format.md`
 >     -   `wiki.md`
 > -   `wiki/`: Obsidian-compatible Markdown knowledge base (architecture, domain, decisions, ops, conventions). See `wiki/skills/wiki.md`.
 >
