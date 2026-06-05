@@ -1,5 +1,5 @@
 html {
-    font-size: 10px;
+    font-size: 0.625rem;
 }
 
 @font-face {
@@ -70,8 +70,8 @@ td.placed-piece {
     top: 1rem;
     left: 1rem;
     padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 0.5rem;
+    box-shadow: 0.125rem 0.125rem 0.5rem rgba(0, 0, 0, 0.2);
 }
 
 #score-player-x, #score-player-o {
@@ -88,7 +88,7 @@ td.placed-piece {
 }
 
 #refresh img {
-    padding: 7px;
+    padding: 0.4375rem;
     width: 3.5rem;
     transition: transform 0.4s ease;
 }
@@ -116,7 +116,7 @@ td.placed-piece {
 }
 
 .line-lr, .line-tb, .line-tlbr, .line-trbl {
-    border-bottom: 3px dotted red;
+    border-bottom: 0.1875rem dotted red;
     position: absolute;
     animation: winLine 0.4s ease-in;
     pointer-events: none;
@@ -140,7 +140,7 @@ td.placed-piece {
     top: -100%;
     bottom: -100%;
     width: 0;
-    border-left: 3px dotted red;
+    border-left: 0.1875rem dotted red;
     border-bottom: none;
     transform: translateX(-50%);
 }
