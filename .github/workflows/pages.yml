@@ -1,0 +1,62 @@
+name: pages
+
+on:
+    push:
+        branches: [master]
+        paths:
+            - '.github/workflows/pages.yml'
+            - 'scripts/check-static-site.py'
+            - '*.css'
+            - '*.html'
+            - '*.js'
+            - '*.svg'
+            - '*.ttf'
+            - '*.woff2'
+    workflow_dispatch:
+
+concurrency:
+    group: pages
+    cancel-in-progress: false
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        steps:
+            - uses: actions/checkout@v4
+            - name: Validate static site
+              run: python3 scripts/check-static-site.py
+            - name: Prepare public artifact
+              run: |
+                  mkdir _site
+                  cp -- \
+                    index.html \
+                    gomoku.html \
+                    main.css \
+                    gomoku.css \
+                    gomoku.js \
+                    sc-logo.svg \
+                    refresh.svg \
+                    Inter-UI-Regular.woff2 \
+                    Inter-UI-Bold.woff2 \
+                    comicSans.ttf \
+                    _site/
+            - uses: actions/configure-pages@v5
+            - uses: actions/upload-pages-artifact@v4
+              with:
+                  path: ./_site
+
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        permissions:
+            pages: write
+            id-token: write
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - name: Deploy GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4

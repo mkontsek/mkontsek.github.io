@@ -42,7 +42,16 @@ git config core.hooksPath .githooks
 
 ## Deploy
 
-Ships through GitHub Pages from the repository contents. No deployment secrets are required for the static site.
+Ships through GitHub Pages via `.github/workflows/pages.yml`. The workflow runs
+the static validation gate, then uploads only the public root HTML, CSS,
+JavaScript, font, and SVG assets. This explicit artifact excludes the
+repository's operational wiki and its shared-skill symlinks, which GitHub Pages
+artifacts do not support.
+
+GitHub Pages must use the **GitHub Actions** publishing source. Pushes to
+`master` that change a public asset or the workflow deploy automatically; use
+the workflow's manual dispatch for an unchanged rebuild. No deployment secrets
+are required.
 
 ## Observability
 
