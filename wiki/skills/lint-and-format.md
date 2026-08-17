@@ -1,1 +1,0 @@
-../../../.agents/skills/lint-and-format/SKILL.md
